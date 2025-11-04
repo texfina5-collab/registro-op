@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Registro de OP</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; padding: 20px; }
+    .container { max-width: 1200px; margin: 20px auto; background: white; border-radius: 16px; padding: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+    h1 { text-align: center; color: #2c3e50; margin-bottom: 20px; }
+    .form-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .form-group { display: flex; flex-direction: column; }
+    label { margin-bottom: 6px; font-weight: 600; color: #2c3e50; font-size: 14px; }
+    input, select, textarea { padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; }
+    button { grid-column: 1 / -1; padding: 14px; background: #007bff; color: white; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; }
+    button:hover { background: #0056b3; }
+    .resultado { grid-column: 1 / -1; padding: 16px; border-radius: 8px; text-align: center; font-weight: bold; margin-top: 10px; }
+    .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+    @media (max-width: 1024px) { .form-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Registro de Orden de Producción (OP)</h1>
+    <form id="formOP" class="form-grid">
+      <div class="form-group"><label>Generado Por *</label><input type="text" id="generadoPor" required /></div>
+      <div class="form-group"><label>Categoría de OP *</label><select id="categoriaOP" required><option value="">Seleccionar...</option><option>Producción</option><option>Reposición</option><option>Adicional</option></select></div>
+      <div class="form-group"><label>Tipo de OP</label><input type="text" id="tipoOP" /></div>
+      <div class="form-group"><label>OP de Referencia</label><input type="text" id="opReferencia" /></div>
+      <div class="form-group"><label>Repo o Adicional</label><input type="text" id="repoAdicional" /></div>
+      <div class="form-group"><label>Booking o Temporada</label><input type="text" id="bookingTemporada" /></div>
+      <div class="form-group"><label>Pedido del Cliente</label><input type="text" id="pedidoCliente" /></div>
+      <div class="form-group"><label>Fecha del Pedido</label><input type="date" id="fechaPedido" /></div>
+      <div class="form-group"><label>Fecha de la OP</label><input type="date" id="fechaOP" /></div>
+      <div class="form-group"><label>Grupo de Clientes</label><input type="text" id="grupoClientes" /></div>
+      <div class="form-group"><label>Subcliente</label><input type="text" id="subcliente" /></div>
+      <div class="form-group"><label>Artículo</label><input type="text" id="articulo" /></div>
+      <div class="form-group"><label>Tipo de Listado</label><input type="text" id="tipoListado" /></div>
+      <div class="form-group"><label>Kg Netos</label><input type="number" step="0.01" id="kgNetos" /></div>
+      <div class="form-group"><label>Kg Brutos</label><input type="number" step="0.01" id="kgBrutos" /></div>
+      <div class="form-group"><label>Estado de OP</label><select id="estadoOP"><option>Pendiente</option><option>En Proceso</option><option>Completada</option><option>Cancelada</option></select></div>
+      <div class="form-group"><label>Motivo de OP Incompleta</label><input type="text" id="motivoIncompleta" /></div>
+      <div class="form-group"><label>Dirección de correo electrónico</label><input type="email" id="email" /></div>
+      <div class="form-group"><label>Comentarios</label><textarea id="comentarios"></textarea></div>
+      <div class="form-group"><label>Motivo Demora de Generación</label><input type="text" id="motivoDemora" /></div>
+      <div class="form-group"><label>Reserva Vinculada</label><input type="text" id="reservaVinculada" /></div>
+      <div class="form-group"><label>Motivo de Reposición</label><input type="text" id="motivoReposicion" /></div>
+      <div class="form-group"><label>Hilos Especiales</label><input type="text" id="hilosEspeciales" /></div>
+      <div class="form-group"><label>REFERENCIA (BO, BC, GO)</label><input type="text" id="referenciaBOBCGO" /></div>
+      <button type="submit">Registrar OP</button>
+      <div id="resultado" class="resultado"></div>
+    </form>
+  </div>
+
+  <script>
+    const form = document.getElementById('formOP');
+    const resultado = document.getElementById('resultado');
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxeZAFS-Uy4-EZd92QkvpkU5zIbHp5L2u4-GDKYVpGaGRgu20G1ftUSvay02SjZs3pX/exec';
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      resultado.textContent = 'Enviando...';
+      resultado.className = 'resultado';
+
+      const data = {
+        generadoPor: document.getElementById('generadoPor').value,
+        categoriaOP: document.getElementById('categoriaOP').value,
+        tipoOP: document.getElementById('tipoOP').value,
+        opReferencia: document.getElementById('opReferencia').value,
+        repoAdicional: document.getElementById('repoAdicional').value,
+        bookingTemporada: document.getElementById('bookingTemporada').value,
+        pedidoCliente: document.getElementById('pedidoCliente').value,
+        fechaPedido: document.getElementById('fechaPedido').value,
+        fechaOP: document.getElementById('fechaOP').value,
+        grupoClientes: document.getElementById('grupoClientes').value,
+        subcliente: document.getElementById('subcliente').value,
+        articulo: document.getElementById('articulo').value,
+        tipoListado: document.getElementById('tipoListado').value,
+        kgNetos: parseFloat(document.getElementById('kgNetos').value) || 0,
+        kgBrutos: parseFloat(document.getElementById('kgBrutos').value) || 0,
+        estadoOP: document.getElementById('estadoOP').value,
+        motivoIncompleta: document.getElementById('motivoIncompleta').value,
+        email: document.getElementById('email').value,
+        comentarios: document.getElementById('comentarios').value,
+        motivoDemora: document.getElementById('motivoDemora').value,
+        reservaVinculada: document.getElementById('reservaVinculada').value,
+        motivoReposicion: document.getElementById('motivoReposicion').value,
+        hilosEspeciales: document.getElementById('hilosEspeciales').value,
+        referenciaBOBCGO: document.getElementById('referenciaBOBCGO').value
+      };
+
+      try {
+        const response = await fetch(SCRIPT_URL, {
+          method: 'POST',
+          body: JSON.stringify(data),
+          headers: { 'Content-Type': 'text/plain' }
+        });
+
+        const result = await response.json();
+
+        if (result.status === 'success') {
+          resultado.innerHTML = `<strong>¡OP registrada!</strong> N°: <strong>${result.op}</strong>`;
+          resultado.className = 'resultado success';
+          form.reset();
+        } else {
+          throw new Error(result.message);
+        }
+      } catch (error) {
+        resultado.innerHTML = `<strong>Error:</strong> ${error.message}`;
+        resultado.className = 'resultado error';
+      }
+    });
+  </script>
+</body>
+</html>
