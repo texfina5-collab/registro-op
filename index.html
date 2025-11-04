@@ -36,7 +36,7 @@
     <form id="formOP" class="form-grid">
       <div class="form-group">
         <label class="obligatorio">Generado Por</label>
-        <input type="text" id="generadoPor" required />
+        <select id="generadoPor" required></select>
       </div>
 
       <div class="form-group">
@@ -155,7 +155,7 @@
 
       <div class="form-group">
         <label class="obligatorio">REFERENCIA (BO, BC, GO)</label>
-        <select id="referencia" required></select>
+        <input type="text" id="referencia" required />
       </div>
 
       <button type="submit" class="btn">Registrar OP</button>
@@ -168,11 +168,14 @@
     const resultado = document.getElementById('resultado');
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxeZAFS-Uy4-EZd92QkvpkU5zIbHp5L2u4-GDKYVpGaGRgu20G1ftUSvay02SjZs3pX/exec';
 
-    // Cargar opciones
+    // CARGAR OPCIONES
     fetch(`${SCRIPT_URL}?action=getOptions`)
       .then(r => r.json())
       .then(data => {
         Object.keys(data).forEach(id => populateSelect(id, data[id]));
+      })
+      .catch(err => {
+        resultado.innerHTML = `<strong style="color:red;">Error al cargar listas: ${err.message}</strong>`;
       });
 
     function populateSelect(id, options) {
@@ -181,7 +184,7 @@
       options.forEach(opt => select.add(new Option(opt, opt)));
     }
 
-    // Agregar artículo
+    // BOTÓN +
     document.getElementById('btnNuevoArticulo').onclick = () => {
       const nuevo = document.getElementById('nuevoArticulo').value.trim();
       if (!nuevo) return;
@@ -196,10 +199,10 @@
       });
     };
 
-    // Enviar con validación
+    // ENVIAR
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      resultado.textContent = 'Validando...';
+      resultado.textContent = 'Enviando...';
       resultado.className = 'resultado';
 
       const data = {
@@ -253,4 +256,3 @@
   </script>
 </body>
 </html>
-
