@@ -6,86 +6,25 @@
   <title>Registro de OP</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      min-height: 100vh;
-      padding: 20px;
-    }
-    .container {
-      max-width: 1200px;
-      margin: 20px auto;
-      background: white;
-      border-radius: 16px;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-      overflow: hidden;
-    }
-    header {
-      background: #2c3e50;
-      color: white;
-      padding: 20px;
-      text-align: center;
-    }
+    body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }
+    .container { max-width: 1200px; margin: 20px auto; background: white; border-radius: 16px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); overflow: hidden; }
+    header { background: #2c3e50; color: white; padding: 20px; text-align: center; }
     h1 { font-size: 24px; margin: 0; }
-    .form-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-      padding: 24px;
-    }
-    .form-group {
-      display: flex;
-      flex-direction: column;
-    }
-    label {
-      margin-bottom: 6px;
-      font-weight: 600;
-      color: #2c3e50;
-      font-size: 14px;
-    }
-    input, select, textarea {
-      padding: 12px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      font-size: 16px;
-      transition: border 0.3s;
-    }
-    input:focus, select:focus, textarea:focus {
-      outline: none;
-      border-color: #667eea;
-      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-    }
+    .form-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; padding: 24px; }
+    .form-group { display: flex; flex-direction: column; }
+    label { margin-bottom: 6px; font-weight: 600; color: #2c3e50; font-size: 14px; }
+    .obligatorio::after { content: " *"; color: red; }
+    input, select, textarea { padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; transition: border 0.3s; }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: #667eea; box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1); }
     textarea { resize: vertical; min-height: 80px; }
-    .btn {
-      grid-column: 1 / -1;
-      padding: 14px;
-      background: #667eea;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-size: 18px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
+    .btn { grid-column: 1 / -1; padding: 14px; background: #667eea; color: white; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; }
     .btn:hover { background: #5a6fd8; }
-    .btn:active { transform: translateY(1px); }
-    .resultado {
-      grid-column: 1 / -1;
-      padding: 16px;
-      border-radius: 8px;
-      text-align: center;
-      font-weight: bold;
-      margin-top: 10px;
-    }
+    .resultado { grid-column: 1 / -1; padding: 16px; border-radius: 8px; text-align: center; font-weight: bold; margin-top: 10px; }
     .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
     .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
-    @media (max-width: 1024px) {
-      .form-grid { grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (max-width: 600px) {
-      .form-grid { grid-template-columns: 1fr; padding: 16px; }
-    }
+    .add-btn { padding: 8px 12px; background: #28a745; color: white; border: none; border-radius: 6px; cursor: pointer; }
+    @media (max-width: 1024px) { .form-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; padding: 16px; } }
   </style>
 </head>
 <body>
@@ -96,23 +35,18 @@
 
     <form id="formOP" class="form-grid">
       <div class="form-group">
-        <label>Generado Por *</label>
+        <label class="obligatorio">Generado Por</label>
         <input type="text" id="generadoPor" required />
       </div>
 
       <div class="form-group">
-        <label>Categoría de OP *</label>
-        <select id="categoriaOP" required>
-          <option value="">Seleccionar...</option>
-          <option>Producción</option>
-          <option>Reposición</option>
-          <option>Adicional</option>
-        </select>
+        <label class="obligatorio">Categoría de OP</label>
+        <select id="categoriaOP" required></select>
       </div>
 
       <div class="form-group">
-        <label>Tipo de OP</label>
-        <input type="text" id="tipoOP" />
+        <label class="obligatorio">Tipo de OP</label>
+        <select id="tipoOP" required></select>
       </div>
 
       <div class="form-group">
@@ -131,38 +65,42 @@
       </div>
 
       <div class="form-group">
-        <label>Pedido del Cliente</label>
-        <input type="text" id="pedidoCliente" />
+        <label class="obligatorio">Pedido del Cliente</label>
+        <input type="text" id="pedidoCliente" required />
       </div>
 
       <div class="form-group">
-        <label>Fecha del Pedido</label>
-        <input type="date" id="fechaPedido" />
+        <label class="obligatorio">Fecha del Pedido</label>
+        <input type="date" id="fechaPedido" required />
       </div>
 
       <div class="form-group">
-        <label>Fecha de la OP</label>
-        <input type="date" id="fechaOP" />
+        <label class="obligatorio">Fecha de la OP</label>
+        <input type="date" id="fechaOP" required />
       </div>
 
       <div class="form-group">
-        <label>Grupo de Clientes</label>
-        <input type="text" id="grupoClientes" />
+        <label class="obligatorio">Grupo de Clientes</label>
+        <select id="grupoClientes" required></select>
       </div>
 
       <div class="form-group">
-        <label>Subcliente</label>
-        <input type="text" id="subcliente" />
+        <label class="obligatorio">Subcliente</label>
+        <select id="subclientes" required></select>
       </div>
 
       <div class="form-group">
-        <label>Artículo</label>
-        <input type="text" id="articulo" />
+        <label class="obligatorio">Artículo</label>
+        <select id="articulo" required></select>
+        <div style="display:flex; gap:8px; margin-top:8px;">
+          <input type="text" id="nuevoArticulo" placeholder="Nuevo artículo" />
+          <button type="button" class="add-btn" id="btnNuevoArticulo">+</button>
+        </div>
       </div>
 
       <div class="form-group">
-        <label>Tipo de Listado</label>
-        <input type="text" id="tipoListado" />
+        <label class="obligatorio">Tipo de Listado</label>
+        <select id="tipoListado" required></select>
       </div>
 
       <div class="form-group">
@@ -171,23 +109,18 @@
       </div>
 
       <div class="form-group">
-        <label>Kg Brutos</label>
-        <input type="number" step="0.01" id="kgBrutos" />
+        <label class="obligatorio">Kg Brutos</label>
+        <input type="number" step="0.01" id="kgBrutos" min="0.01" required />
       </div>
 
       <div class="form-group">
-        <label>Estado de OP</label>
-        <select id="estadoOP">
-          <option>Pendiente</option>
-          <option>En Proceso</option>
-          <option>Completada</option>
-          <option>Cancelada</option>
-        </select>
+        <label class="obligatorio">Estado de OP</label>
+        <select id="estadoOP" required></select>
       </div>
 
       <div class="form-group">
-        <label>Motivo de OP Incompleta</label>
-        <input type="text" id="motivoIncompleta" />
+        <label class="obligatorio">Motivo de OP Incompleta</label>
+        <select id="motivoIncompleta" required></select>
       </div>
 
       <div class="form-group">
@@ -202,7 +135,7 @@
 
       <div class="form-group">
         <label>Motivo Demora de Generación</label>
-        <input type="text" id="motivoDemora" />
+        <select id="motivoDemora"></select>
       </div>
 
       <div class="form-group">
@@ -212,17 +145,17 @@
 
       <div class="form-group">
         <label>Motivo de Reposición</label>
-        <input type="text" id="motivoReposicion" />
+        <select id="motivoReposicion"></select>
       </div>
 
       <div class="form-group">
         <label>Hilos Especiales</label>
-        <input type="text" id="hilosEspeciales" />
+        <select id="hilosEspeciales"></select>
       </div>
 
       <div class="form-group">
-        <label>REFERENCIA (BO, BC, GO)</label>
-        <input type="text" id="referenciaBOBCGO" />
+        <label class="obligatorio">REFERENCIA (BO, BC, GO)</label>
+        <select id="referencia" required></select>
       </div>
 
       <button type="submit" class="btn">Registrar OP</button>
@@ -233,13 +166,40 @@
   <script>
     const form = document.getElementById('formOP');
     const resultado = document.getElementById('resultado');
-
-    // TU URL DE APPS SCRIPT
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxeZAFS-Uy4-EZd92QkvpkU5zIbHp5L2u4-GDKYVpGaGRgu20G1ftUSvay02SjZs3pX/exec';
 
+    // Cargar opciones
+    fetch(`${SCRIPT_URL}?action=getOptions`)
+      .then(r => r.json())
+      .then(data => {
+        Object.keys(data).forEach(id => populateSelect(id, data[id]));
+      });
+
+    function populateSelect(id, options) {
+      const select = document.getElementById(id);
+      select.innerHTML = '<option value="">Seleccionar...</option>';
+      options.forEach(opt => select.add(new Option(opt, opt)));
+    }
+
+    // Agregar artículo
+    document.getElementById('btnNuevoArticulo').onclick = () => {
+      const nuevo = document.getElementById('nuevoArticulo').value.trim();
+      if (!nuevo) return;
+      fetch(SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'addArticulo', articulo: nuevo })
+      }).then(() => {
+        const s = document.getElementById('articulo');
+        s.add(new Option(nuevo, nuevo));
+        s.value = nuevo;
+        document.getElementById('nuevoArticulo').value = '';
+      });
+    };
+
+    // Enviar con validación
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      resultado.textContent = 'Enviando...';
+      resultado.textContent = 'Validando...';
       resultado.className = 'resultado';
 
       const data = {
@@ -253,7 +213,7 @@
         fechaPedido: document.getElementById('fechaPedido').value,
         fechaOP: document.getElementById('fechaOP').value,
         grupoClientes: document.getElementById('grupoClientes').value,
-        subcliente: document.getElementById('subcliente').value,
+        subcliente: document.getElementById('subclientes').value,
         articulo: document.getElementById('articulo').value,
         tipoListado: document.getElementById('tipoListado').value,
         kgNetos: parseFloat(document.getElementById('kgNetos').value) || 0,
@@ -266,7 +226,7 @@
         reservaVinculada: document.getElementById('reservaVinculada').value,
         motivoReposicion: document.getElementById('motivoReposicion').value,
         hilosEspeciales: document.getElementById('hilosEspeciales').value,
-        referenciaBOBCGO: document.getElementById('referenciaBOBCGO').value
+        referencia: document.getElementById('referencia').value
       };
 
       try {
